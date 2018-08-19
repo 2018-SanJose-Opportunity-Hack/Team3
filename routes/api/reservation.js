@@ -10,7 +10,8 @@ const User = mongoose.model('users');
 const Day = mongoose.model('days');
 const TimeBlock = mongoose.model('timeblocks');
 const Reservation  = mongoose.model('reservations');
-const subscribed = mongoose.model('subscribe')
+const subscribed = mongoose.model('subscribe');
+const schedule = require('node-schedule');
 
 
 
@@ -322,4 +323,103 @@ router.put('/admin/cancel/:reservationId', passport.authenticate('jwt', {session
         })
     })
 });
+
+
+
+//
+// function roundMinutes(date) {
+//
+//     date.setHours(date.getHours());
+//     date.setMinutes(0);
+//     date.setSeconds(0);
+//     date.setMilliseconds(0);
+//
+//
+//     return date;
+// }
+
+//Job For Updating Non-CheckedIn bookings to Cancelled
+let j = schedule.scheduleJob('15 * * * * ', function(){
+
+
+    // let openTime =new Date();
+let openTime = new Date();
+
+//for 45 min-th query,add +1 to hour.
+    openTime.setHours(openTime.getHours())
+
+
+
+    // let roundTime= roundMinutes(openTime)
+
+    console.log("Scheduler ran at :" +openTime )
+
+    TimeBlock.find({
+        startTime:
+            {
+                $lt:openTime
+            },
+            endTime:
+                {
+                   $gte: openTime
+                },
+        isAvailable:false
+
+    }).then(retTimeBlocks=>{
+
+        for ( let i = 0; i < retTimeBlocks.length; i++) {
+           let  currentReservation = retTimeBlocks[i].reservation
+
+            Reservation.findById(
+                currentReservation
+            ).then(retReservation=>{
+                if(retReservation.status=="CheckIn")
+                {
+
+                }
+                else
+                {
+                    // update status of Reservation
+                    retReservation.status="Cancelled"
+                    retReservation.save();
+                    console.log("Cancelled Status of " +retReservation.id)
+
+                    retTimeBlocks[i].isAvailable = true;
+                    retTimeBlocks[i].reservation =undefined;
+                    retTimeBlocks[i].save();
+                    console.log("Performed Unset of" + retTimeBlocks[i].id)
+                }
+
+
+
+            })
+
+
+
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+        })
+
+
+
+
+
+
+
+});
+
+
+
+
 module.exports = router;

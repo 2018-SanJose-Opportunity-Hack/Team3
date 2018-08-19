@@ -4,6 +4,11 @@ const app = express();
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const schedule = require('node-schedule');
+const moment = require('moment');
+const momenttz = require('moment-timezone');
+
+
 
 //Configure the .env 
 dotenv.config();
@@ -29,6 +34,9 @@ app.use(passport.initialize());
 //passport jwt setup
 require('./config/passport.js')(passport);
 
+
+
+
 //import routes
 const routes = require('./routes/api/index.js');
 app.use("/api/users", routes.users);
@@ -37,3 +45,4 @@ app.use('/api/reservation', routes.reservation);
 app.listen(process.env.PORT || 5000, () => {
   console.log("Server listening on PORT 5000");
 });
+
