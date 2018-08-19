@@ -12,6 +12,12 @@ const styles = {
   tabContainer:{
     marginTop: 20
   },
+  spinner: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
+  },
   imageContainer: {
     position: 'relative',
     '&&.MuiGrid-item-121': {

@@ -1,5 +1,6 @@
 const styles = {
   root: {
+    margin: 'auto',
     marginTop: 40,
     width: '100%'
   },

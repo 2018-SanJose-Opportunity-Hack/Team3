@@ -25,7 +25,6 @@ class Register extends Component{
     });
   }
   onRegisterClickHandler = () =>{
-    console.log(this.state.username, this.state.password);
     this.props.registerUser({
       username: this.state.username,
       email: this.state.email,
@@ -130,7 +129,7 @@ class Register extends Component{
               variant = 'contained' 
               color='primary' 
               onClick = {this.onRegisterClickHandler} 
-              className={this.props.classes.button}>
+              className = {this.props.classes.button}>
               Register
             </Button>
           </Grid>
