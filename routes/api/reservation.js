@@ -12,7 +12,7 @@ const TimeBlock = mongoose.model('timeblocks');
 const Reservation  = mongoose.model('reservations');
 const Subscribe = mongoose.model('subscribe');
 const schedule = require('node-schedule');
-const sendEmail  = require('client/src/util/notification');
+
 
 
 
