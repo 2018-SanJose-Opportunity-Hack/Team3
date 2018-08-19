@@ -8,6 +8,15 @@ import Checkbox from '@material-ui/core/Checkbox';
 import {withStyles} from '@material-ui/core/styles';
 import styles from './Styles';
 const slot = (props)=>{
+  const change = (e)=>{
+    if ((props.subscribedUsers.findIndex(el => el === props.user._id) !== -1)) {
+      console.log('adding');
+      props.removeSubscription();
+    }else{
+      console.log('subtracting');
+      props.addSubscription();
+    }
+  }
   return(
     <Paper className = {props.classes.paper}>
       <Grid container spacing={16}>
@@ -22,14 +31,15 @@ const slot = (props)=>{
           </Button>
         </Grid>
       </Grid>
-      {props.isAvailable ? null :
+      {props.isAvailable &&props.user? null :
           <Grid>
             <FormControlLabel
               control={
                 <Checkbox
-                  checked = {false}
+                  checked = {props.subscribedUsers.findIndex(el=>el===props.user._id)!==-1}
                   value = 'subscribed'
                   color = 'primary'
+                  onChange = {change}
                 />
               }
               label = 'get notification'

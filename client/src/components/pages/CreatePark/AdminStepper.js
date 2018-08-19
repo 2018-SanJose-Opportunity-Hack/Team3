@@ -59,12 +59,29 @@ class AdminStepper extends Component
   handleApplyAll = () => {const daysArray = Array(7).fill({min: this.state.minGen, max: this.state.maxGen}); this.setState({days: daysArray});};
   handleSubmit = () => {
     let days = JSON.parse(JSON.stringify(this.state.days));
+    const convertDateToHours = (time)=>{
+      const num = parseInt(time.split(' ')[0]);
+      const am = time.split(' ')[1]==='AM';
+      if(!am){
+        
+        if(num===12){
+          return 12;
+        }else{
+          return num+12;
+        }
+      }else{
+        if(num===12){
+          return 0;
+        }else{
+          return num;
+        }
+      }
+    }
     days = days.map(el=>({
-      min: moment(el.min, 'h A').format('x'),
-      max: moment(el.min, 'h A').format('x')
+      min: convertDateToHours(el.min)*3600000,
+      max: convertDateToHours(el.max)*3600000
     }));
-    console.log(this.state.imgFile);
-    this.props.createPark(this.state.name, this.state.address, days, this.state.imgFile, this.props.history);
+    this.props.createPark(this.state.parkName, this.state.parkAddress, days, this.state.imgFile, this.props.history);
   }
 
   render()
@@ -85,7 +102,7 @@ class AdminStepper extends Component
                 fileUpload = {(file) => this.setState({imgFile: file})}/>;
             default:
               return (
-                <div>
+                <div className = {classes.container}>
                     <Typography className = {classes.confirmation}>
                         All steps are completed. Do you wish to submit data or go back?
                     </Typography>
@@ -132,6 +149,15 @@ const styles = (theme) =>
 {
   return (
     {
+      container: {
+        width: '95%',
+        margin: 'auto',
+        marginBottom: '2rem',
+        padding: '1.5rem',
+        backgroundColor: 'lightgrey',
+        borderRadius: '1.5rem',
+        textAlign: 'center'
+      },
       form: {margin: 'auto', width: '90%'},
       root: {margin: 'auto'},
       stepper: {backgroundColor: 'lightblue', width: '90%', margin: 'auto', borderRadius: '1.2rem'},

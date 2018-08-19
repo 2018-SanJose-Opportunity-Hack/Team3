@@ -4,7 +4,8 @@ const initialState = {
   parksLoading: false,
   parkLoading: false,
   dayLoading: false,
-  reservationLoading: false
+  reservationLoading: false,
+  subscriptionLoading: false
 };
 
 const reducer = (state = initialState, action) =>{
@@ -48,6 +49,16 @@ const reducer = (state = initialState, action) =>{
       return{
         ...state,
         reservationLoading: false
+      }
+    case actionTypes.loading.SUBSCRIPTION_LOADING:
+      return{
+        ...state,
+        subscriptionLoading: true
+      }
+    case actionTypes.loading.REMOVE_SUBSCRIPTION_LOADING:
+      return{
+        ...state,
+        subscriptionLoading: false
       }
     default:
       return state;

@@ -6,11 +6,6 @@ const styles = {
       cursor: 'pointer',
     }
   },
-  media: {
-    position: 'relative',
-    width: '100%',
-    height: '100%'
-  },
   content: {
     position: 'absolute',
     bottom: 0,

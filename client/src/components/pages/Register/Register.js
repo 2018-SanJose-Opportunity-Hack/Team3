@@ -25,7 +25,6 @@ class Register extends Component{
     });
   }
   onRegisterClickHandler = () =>{
-    console.log(this.state.username, this.state.password);
     this.props.registerUser({
       username: this.state.username,
       email: this.state.email,
@@ -56,7 +55,7 @@ class Register extends Component{
                 type = 'text'
                 onChange = {(e)=>this.onChangeFieldHandler('username', e)}
                 value = {this.state.username}
-                error = {this.props.errors.login.username?true: false}
+                error = {this.props.errors.register.username?true: false}
                 autoComplete = "off" 
                 className = {this.props.classes.formInput}>
               </Input>
@@ -130,7 +129,7 @@ class Register extends Component{
               variant = 'contained' 
               color='primary' 
               onClick = {this.onRegisterClickHandler} 
-              className={this.props.classes.button}>
+              className = {this.props.classes.button}>
               Register
             </Button>
           </Grid>
