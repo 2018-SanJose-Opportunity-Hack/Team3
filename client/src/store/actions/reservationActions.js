@@ -15,6 +15,7 @@ export const makeReservation=(parkId, dayId, timeblockId, callbackFunc)=>dispatc
             type: actionTypes.parks.SET_SINGLE_PARK,
             payload: response.data.park
           });
+          callbackFunc();
           dispatch({
             type: actionTypes.loading.STOP_MAKE_RESERVATION_LOADING
           })
@@ -24,7 +25,7 @@ export const makeReservation=(parkId, dayId, timeblockId, callbackFunc)=>dispatc
                 type: actionTypes.auth.SET_USER,
                 payload: user
               });
-              callbackFunc();
+              
             })
         })
     })

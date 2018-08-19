@@ -12,9 +12,12 @@ import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
 import {fetchDay} from '../../../../../store/actions/dayActions';
 import {makeReservation} from '../../../../../store/actions/reservationActions';
+import {addSubscription, removeSubscription} from '../../../../../store/actions/subscriptionActions';
 import styles from './Styles';
 import Slot from './components/Slot/Slot';
 import Wrapper from '../../../../hoc/Wrapper';
+import Backdrop from '@material-ui/core/Backdrop';
+import zIndex from '@material-ui/core/styles/zIndex';
 const moment = require('moment-timezone');
 
 class Availibility extends Component{
@@ -82,10 +85,10 @@ class Availibility extends Component{
               <Typography variant= 'display1' className = {this.props.classes.message}>
                 {this.props.auth.user?'Are you sure you want to reserve this time slot':'Please log in before making any reservation.'}
               </Typography>
-              <Button color = 'primary' className = {this.props.classes.button} variant = 'contained' onClick = {this.props.auth.user? this.makeReservation: ()=>{this.props.history.push('/login')}}>
+              <Button color = 'primary' className = {this.props.classes.button} variant = 'contained' onClick = {this.props.auth.user? this.makeReservation: ()=>{this.props.history.push('/login')}} disabled = {this.props.loading.reservationLoading}>
                   {this.props.auth.user ? 'Confirm': 'Login'}
                 </Button>
-              <Button className = {this.props.classes.button} variant = 'contained' onClick = {this.reservationModalHandler}>Close</Button>
+              <Button className = {this.props.classes.button} variant = 'contained' onClick = {this.reservationModalHandler} disabled = {this.props.loading.reservationLoading}>Close</Button>
             </Paper>
           </Modal>
           <div style = {{
@@ -111,6 +114,7 @@ class Availibility extends Component{
           </div>
           {this.props.park.park.days[this.state.dayIndex].timeblocks.map(el=>
           {
+            console.log(el._id);
               return (
                 <Slot 
                   startTime = {moment(el.startTime).tz("America/Los_Angeles").format('hh:mm A')}
@@ -119,6 +123,10 @@ class Availibility extends Component{
                   click = {()=>this.openReservationModal(el._id)}
                   key = {el._id}
                   id = {el._id}
+                  user = {this.props.auth.user}
+                  subscribedUsers = {el.subscriptions.map(el=>el.user)}
+                  addSubscription = {()=>this.props.addSubscription(this.props.park.park._id, this.props.park.park.days[this.state.dayIndex]._id, el._id)}
+                  removeSubscription = {()=>this.props.removeSubscription(this.props.park.park._id, el._id)}
                 />
               ) 
           })}
@@ -133,6 +141,7 @@ class Availibility extends Component{
         </Typography>
         <Divider/>
         {display}
+        <Backdrop open={this.props.loading.subscriptionLoading} style={this.props.loading.subscriptionLoading?{zIndex: 500}:{}}/>
       </Paper>
     )
   }
@@ -147,6 +156,8 @@ const mapStateToProps = (state)=>({
 });
 const mapDispatchToProps = (dispatch)=>({
   fetchDay: (parkId, dayId) => dispatch(fetchDay(parkId, dayId)),
-  makeReservation: (parkId, dayId, timeBlockId, closeModal)=> dispatch(makeReservation(parkId, dayId, timeBlockId, closeModal))
+  makeReservation: (parkId, dayId, timeBlockId, closeModal)=> dispatch(makeReservation(parkId, dayId, timeBlockId, closeModal)),
+  addSubscription: (parkId, dayId, timeBlockId) => dispatch(addSubscription(parkId, dayId, timeBlockId)),
+  removeSubscription: (parkId, timeBlockId) => dispatch(removeSubscription(parkId, timeBlockId))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Availibility));

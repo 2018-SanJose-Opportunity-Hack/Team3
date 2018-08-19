@@ -24,7 +24,11 @@ const TimeBlockSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users'
-    }
+    },
+    subscriptions: [{
+      type: Schema.Types.ObjectId,
+      ref: 'subscribe'
+    }]
 
 });
 mongoose.model('timeblocks', TimeBlockSchema);

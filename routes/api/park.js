@@ -214,7 +214,7 @@ router.get('/all', (req, res) => {
 // @access  Public
 router.get('/:id', (req, res) => {
   Park.findById(req.params.id)
-    .populate({path: 'days', populate: {path:'timeblocks'}})
+    .populate({path: 'days', populate: {path:'timeblocks', populate: {path: 'subscriptions'}}})
     .then(park => {
       if(park){
         return res.json({
@@ -290,7 +290,6 @@ router.post('/:parkId/profile', passport.authenticate('jwt',{session: false}), (
             }).end(req.file.buffer);
           })
       })
-    
   });
 });
 // @route   POST api/park/:parkId/profile

@@ -10,7 +10,7 @@ const User = mongoose.model('users');
 const Day = mongoose.model('days');
 const TimeBlock = mongoose.model('timeblocks');
 const Reservation  = mongoose.model('reservations');
-const subscribed = mongoose.model('subscribe')
+const Subscribe = mongoose.model('subscribe')
 
 
 
@@ -82,8 +82,6 @@ router.post("/hello",  passport.authenticate('jwt', {session: false}), (req, res
 // @desc    Subscribe
 // @access  Public
 
-
-
 router.post("/subscribe/:parkId/:dayId/:timeBlockId",  passport.authenticate('jwt', {session: false}), (req, res)=>{
     User.findById(req.user.id)
         .then(user=> {
@@ -91,36 +89,62 @@ router.post("/subscribe/:parkId/:dayId/:timeBlockId",  passport.authenticate('jw
                 return res.status(401).json({errors: 'Not an existing user'});
             }
 
-            let newReservation = new subscribed({
+            let newSubscription = new Subscribe({
                 user : user.id,
-                time : timeBlockId
+                time : req.params.timeBlockId
 
             })
 
-            newReservation.save()
-                .then(doc => {
-                    console.log(doc)
-                })
-                .catch(err => {
-                    console.error(err)
-                })
+            newSubscription.save()
+              .then(subscription => {
 
+                TimeBlock.findByIdAndUpdate(req.params.timeBlockId,{$push: {subscriptions: subscription.id}}, {new: true})
+                  .then(()=>{
+                    return res.json({success: true});
+                  });
+              })
+              .catch(err => {
+                  console.error(err)
+              })
+            
             const momentObj = moment().tz('America/Los_Angeles');
             let openTime =momentObj.toDate().toDateString();
             console.log("Hey logging open time " + openTime);
 
-
-
-            return res.json({success: true, reservation: "subscribed"});
         })
-
-
-
-
 });
 
+// @route   DELETE api/reservation/unsubscribe/:parkId/:dayId/:timeBlockId
+// @desc    Subscribe
+// @access  Public
 
-
+router.delete("/unsubscribe/:timeBlockId",  passport.authenticate('jwt', {session: false}), (req, res)=>{
+    User.findById(req.user.id)
+        .then(user=> {
+            if (!user) {
+                return res.status(401).json({errors: 'Not an existing user'});
+            }
+            console.log(req.user.id, req.params.timeBlockId);
+            Subscribe.findOneAndRemove({user: req.user.id, time: req.params.timeBlockId})
+              .then(subscription=>{
+                if(!subscription){
+                  return res.status(404).json({errors: 'Subscription does not exist'});
+                }
+                TimeBlock.findByIdAndUpdate(req.params.timeBlockId, {$pull: {subscriptions: subscription.id}}, {new: true})
+                  .then(()=>{
+                    return res.json({success: true});
+                  })
+                  .catch(err=>{
+                    console.log('err in timeblock');
+                  })
+              })
+              .catch(err=>{
+                console.log('err in subscribe');
+              })
+          
+            
+        })
+});
 
 // @route   POST api/reservation/:parkId/:dayId/:timeBlockId
 // @desc    Reserve
@@ -140,7 +164,6 @@ router.post('/:parkId/:dayId/:timeBlockId', passport.authenticate('jwt', {sessio
         (callback)=>{
           Park.findById(req.params.parkId)
             .then(park=>{
-              
               callback(null, park? {res: true, park}:  {res: false, park})
             })
         },
@@ -149,23 +172,8 @@ router.post('/:parkId/:dayId/:timeBlockId', passport.authenticate('jwt', {sessio
             .then(day=>{
               if(!day){
                 callback( null,{res: false, day});
-              }else if(day.park.toString()===req.params.parkId){
-                Reservation.find({user: user.id})
-                  .then(reservations=>{
-                    let reservationCount = 0;
-                    for(reservation of reservations){
-                      if(moment(reservation.openTime).tz('America/Los_Angeles').startOf('day').format('x')===moment(day.openTime).tz('America/Los_Angeles').startOf('day').format('x')){
-                        reservationCount++;
-                      }
-                    }
-                    if(reservationCount>2){
-                      callback(null, {res: false})
-                    }else{
-                      callback( null,{res: true, day});
-                    }
-                  })
-              }else{
-                callback(null,{res: false, day});
+              }else {
+                callback(null,{res: true, day});
               }
             })
         },
@@ -183,6 +191,7 @@ router.post('/:parkId/:dayId/:timeBlockId', passport.authenticate('jwt', {sessio
         }
       ], (err, results)=>{
         const length = results.filter(el=> el.res).length;
+        console.log(length)
         if(length!==3){
           return res.status(400).json({errors: 'Wrong Parameters'});
         }
@@ -221,7 +230,6 @@ router.put('/cancel/:reservationId', passport.authenticate('jwt', {session: fals
       if(!user.isApproved){
         return res.status(403).json({errors: 'No permission'});
       }
-      console.log(req.params.reservationId);
       Reservation.findById(req.params.reservationId)
         .then(reservation=>{
           if(!reservation){

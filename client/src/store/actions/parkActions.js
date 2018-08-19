@@ -32,6 +32,7 @@ export const getParkById = (id)=> dispatch=>{
   axios.get(`/api/park/${id}`)
     .then(response=>{
       const park = response.data.park;
+      console.log('hello');
       console.log(park);
       dispatch({
         type: actionTypes.parks.SET_SINGLE_PARK,

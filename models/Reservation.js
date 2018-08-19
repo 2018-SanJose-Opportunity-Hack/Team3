@@ -30,5 +30,6 @@ const ReservationSchema = new Schema({
     type: Boolean,
     default: false
   }
+  
 });
 mongoose.model('reservations', ReservationSchema);
