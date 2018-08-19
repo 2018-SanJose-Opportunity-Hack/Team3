@@ -1,0 +1,11 @@
+.imgModal{
+  filter: blur(0px) saturate(100%);
+  transition: filter 0.5s;
+}
+.imgModal:hover{
+  cursor: pointer;
+  filter: blur(1px) saturate(275%);
+}
+.modal:hover{
+  cursor: pointer;
+}
