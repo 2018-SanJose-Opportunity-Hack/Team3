@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { blue } from '@material-ui/core/colors';
 
-import {BrowserRouter, withRouter, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, withRouter, Route, Switch, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {setPage} from './store/actions/pageActions';
 
@@ -37,13 +37,14 @@ class App extends Component {
         <MuiThemeProvider theme = {theme}>
           <NavContainer page = {this.props.location.pathname} history = {this.props.history}/>
           <Switch>
-            <Route exact path = '/' component = {temp}/>
+            
             <Route exact path = "/login" component = {Login}/>
             <Route exact path = '/register' component = {Register}/>
             <Route path = '/account' component = {Account}/>
             <Route path = '/park/:id' component = {Park}/>
             <Route exact path = '/parks' component= {Parks}/>
             <Route exact path = '/createPark' component= {AdminStepper}/>
+            <Redirect from ='/' to ='/parks'/>
           </Switch>
         </MuiThemeProvider>
     

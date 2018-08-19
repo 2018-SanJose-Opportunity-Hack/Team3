@@ -18,6 +18,7 @@ import Slot from './components/Slot/Slot';
 import Wrapper from '../../../../hoc/Wrapper';
 import Backdrop from '@material-ui/core/Backdrop';
 import zIndex from '@material-ui/core/styles/zIndex';
+//import PaypalButton from '../../../../general/PayPalButton';
 const moment = require('moment-timezone');
 
 class Availibility extends Component{
@@ -62,7 +63,7 @@ class Availibility extends Component{
       maxDate: moment(dateMax).tz("America/Los_Angeles").toDate()
     });
   }
-
+  
   render()
   {
     let display = null;
@@ -75,6 +76,29 @@ class Availibility extends Component{
         <Typography variant='body1'>{this.props.errors.day.error}</Typography>
       )
     }else{
+      let buttonOptions = null;
+      if(this.props.auth.user){
+        /*buttonOptions = (
+          <div>
+            <PaypalButton
+              client={{production: 'random'}}
+              env={'production'}
+              commit={true}
+              currency={'USD'}
+              total={100}
+              onSuccess={()=>console.log('success')}
+              onError={()=> console.log('error')}
+              onCancel={()=> console.log('cancel')}
+            />
+          </div>
+        )*/
+      }else{
+        buttonOptions = (
+          <Button color = 'primary' className = {this.props.classes.button} variant = 'contained' onClick = {this.props.auth.user? this.makeReservation: ()=>{this.props.history.push('/login')}} disabled = {this.props.loading.reservationLoading}>
+            Login
+          </Button>
+        )
+      }
       display = (
         <Wrapper>
           <Modal
@@ -85,9 +109,12 @@ class Availibility extends Component{
               <Typography variant= 'display1' className = {this.props.classes.message}>
                 {this.props.auth.user?'Are you sure you want to reserve this time slot':'Please log in before making any reservation.'}
               </Typography>
+              {
               <Button color = 'primary' className = {this.props.classes.button} variant = 'contained' onClick = {this.props.auth.user? this.makeReservation: ()=>{this.props.history.push('/login')}} disabled = {this.props.loading.reservationLoading}>
                   {this.props.auth.user ? 'Confirm': 'Login'}
                 </Button>
+              }
+              {/*buttonOptions*/}
               <Button className = {this.props.classes.button} variant = 'contained' onClick = {this.reservationModalHandler} disabled = {this.props.loading.reservationLoading}>Close</Button>
             </Paper>
           </Modal>
