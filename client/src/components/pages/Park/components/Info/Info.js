@@ -16,7 +16,7 @@ const info = (props) =>
     return [0,1,2,3,4,5,6].map((e) =>
     {
       return(
-        <div className = {props.classes.generalTime}>
+        <div className = {props.classes.generalTime} key = {e}>
           <Typography className = {props.classes.day}> {dayNames[e]} </Typography>
           <Grid container spacing={0}>
             <Grid item xs={12} md={5}>

@@ -7,16 +7,20 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {withStyles} from '@material-ui/core/styles';
 import styles from './Styles';
+import isEmpty from '../../../../../../../util/is-empty';
 const slot = (props)=>{
   const change = (e)=>{
     if ((props.subscribedUsers.findIndex(el => el === props.user._id) !== -1)) {
-      console.log('adding');
+      console.log('remove');
       props.removeSubscription();
     }else{
-      console.log('subtracting');
+      console.log('add');
       props.addSubscription();
     }
   }
+  
+  console.log(props.isAvailable, isEmpty(props.user))
+  
   return(
     <Paper className = {props.classes.paper}>
       <Grid container spacing={16}>
@@ -31,7 +35,7 @@ const slot = (props)=>{
           </Button>
         </Grid>
       </Grid>
-      {props.isAvailable &&props.user? null :
+      {!props.isAvailable && props.user? 
           <Grid>
             <FormControlLabel
               control={
@@ -44,7 +48,7 @@ const slot = (props)=>{
               }
               label = 'get notification'
             />
-          </Grid>
+          </Grid>:null
         }
     </Paper>
   )

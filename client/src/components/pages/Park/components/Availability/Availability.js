@@ -141,7 +141,6 @@ class Availibility extends Component{
           </div>
           {this.props.park.park.days[this.state.dayIndex].timeblocks.map(el=>
           {
-            console.log(el._id);
               return (
                 <Slot 
                   startTime = {moment(el.startTime).tz("America/Los_Angeles").format('hh:mm A')}
@@ -150,6 +149,7 @@ class Availibility extends Component{
                   click = {()=>this.openReservationModal(el._id)}
                   key = {el._id}
                   id = {el._id}
+                  reservation = {el.reservation}
                   user = {this.props.auth.user}
                   subscribedUsers = {el.subscriptions.map(el=>el.user)}
                   addSubscription = {()=>this.props.addSubscription(this.props.park.park._id, this.props.park.park.days[this.state.dayIndex]._id, el._id)}
