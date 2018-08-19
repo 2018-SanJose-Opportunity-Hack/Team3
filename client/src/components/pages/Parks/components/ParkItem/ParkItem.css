@@ -1,0 +1,13 @@
+.media
+{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    filter: saturate(100%);
+    transition: filter 0.5s;
+}
+
+.media:hover
+{
+    filter: saturate(325%);
+}

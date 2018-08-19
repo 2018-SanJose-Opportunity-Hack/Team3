@@ -1,7 +1,8 @@
 const styles = {
   root: {
-    marginTop: 40,
-    width: '100%'
+    margin: 'auto',
+    marginTop: 25,
+    width: '100%',
   },
   paper: {
     width: 500,

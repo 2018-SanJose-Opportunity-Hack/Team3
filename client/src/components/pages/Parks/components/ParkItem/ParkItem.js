@@ -8,12 +8,13 @@ import Button from '@material-ui/core/Button';
 import CardMedia from '@material-ui/core/CardMedia';
 import {withStyles} from '@material-ui/core/styles';
 import styles from './Styles';
+import './ParkItem.css';
 const parkItem = (props)=>{
   return (
     <Card className = {props.classes.card} onClick= {props.click}>
       <CardMedia
         image = {props.image!=='none'?props.image:'https://material-ui.com/static/images/cards/contemplative-reptile.jpg'}
-        className = {props.classes.media}
+        className = 'media'
       >
         <div className = {props.classes.content}>
           <CardContent>
