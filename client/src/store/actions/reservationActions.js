@@ -38,7 +38,8 @@ export const makeReservation=(parkId, dayId, timeblockId, callbackFunc)=>dispatc
     })
 }
 export const cancelOwnReservation=(reservationId)=>dispatch=>{
-  axios.put(`/api/reservation/${reservationId}`)
+  console.log(reservationId);
+  axios.put(`/api/reservation/cancel/${reservationId}`)
     .then(response=>{
       axios.get('/api/users/current')
         .then(response=>{
@@ -46,6 +47,9 @@ export const cancelOwnReservation=(reservationId)=>dispatch=>{
             type: actionTypes.auth.SET_USER,
             payload: response.data.user
           })
+        })
+        .catch(error=>{
+          console.log(error.response);
         })
     })
 }

@@ -26,21 +26,12 @@ const subscribed = mongoose.model('subscribe')
 // @route   POST api/reservation/hell
 // @desc    Subscribe
 // @access  Public
-
-
-
 router.post("/hello",  passport.authenticate('jwt', {session: false}), (req, res)=>{
     User.findById(req.user.id)
         .then(user=> {
             if (!user) {
                 return res.status(401).json({errors: 'Not an existing user'});
             }
-
-
-
-
-
-
             subscribed.find({
                 time : "5b78be509eaebe056004ba78"
             }).then(retSubscribed=>{
@@ -161,7 +152,7 @@ router.post('/:parkId/:dayId/:timeBlockId', passport.authenticate('jwt', {sessio
               }else if(day.park.toString()===req.params.parkId){
                 Reservation.find({user: user.id})
                   .then(reservations=>{
-                    const reservationCount = 0;
+                    let reservationCount = 0;
                     for(reservation of reservations){
                       if(moment(reservation.openTime).tz('America/Los_Angeles').startOf('day').format('x')===moment(day.openTime).tz('America/Los_Angeles').startOf('day').format('x')){
                         reservationCount++;
@@ -218,8 +209,8 @@ router.post('/:parkId/:dayId/:timeBlockId', passport.authenticate('jwt', {sessio
       })
     })
 });
-// @route   PUT api/reservation/:parkId/:dayId/:timeBlockId
-// @desc    Reserve
+// @route   PUT api/reservation/cancel/:reservationId
+// @desc    Cancel Reservation
 // @access  Private
 router.put('/cancel/:reservationId', passport.authenticate('jwt', {session: false}), (req, res)=>{
   User.findById(req.user.id)
@@ -230,6 +221,7 @@ router.put('/cancel/:reservationId', passport.authenticate('jwt', {session: fals
       if(!user.isApproved){
         return res.status(403).json({errors: 'No permission'});
       }
+      console.log(req.params.reservationId);
       Reservation.findById(req.params.reservationId)
         .then(reservation=>{
           if(!reservation){
@@ -242,16 +234,7 @@ router.put('/cancel/:reservationId', passport.authenticate('jwt', {session: fals
             (callback)=>{
               TimeBlock.findOneAndUpdate({reservation: reservation.id}, {isAvailable: true, $unset: {reservation: ''}}, {new: true})
                 .then(timeblock=>{
-
-
-
-
-
-                  //remove timeblock if exists
                     callback(null, true);
-
-
-
                 })
             },
             (callback)=>{

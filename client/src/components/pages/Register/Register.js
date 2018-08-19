@@ -56,7 +56,7 @@ class Register extends Component{
                 type = 'text'
                 onChange = {(e)=>this.onChangeFieldHandler('username', e)}
                 value = {this.state.username}
-                error = {this.props.errors.login.username?true: false}
+                error = {this.props.errors.register.username?true: false}
                 autoComplete = "off" 
                 className = {this.props.classes.formInput}>
               </Input>

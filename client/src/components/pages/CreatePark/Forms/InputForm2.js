@@ -45,8 +45,17 @@ class InputForm2 extends Component
         else
         {
             const errorArray = JSON.parse(JSON.stringify(this.state[id]));
-            errorArray[day] = false;
-            this.setState({[id]: errorArray});
+            const errorArrayCompare = JSON.parse(JSON.stringify(this.state.compareError));
+            if(errorArrayCompare[day] === true)
+            {
+                errorArrayCompare[day] = false;
+                this.setState({compareError: errorArray});
+            }
+            if(errorArray[day] === true)
+            {
+                errorArray[day] = false;
+                this.setState({[id]: errorArray});
+            }
         }
     }
 
@@ -139,7 +148,7 @@ class InputForm2 extends Component
                             disabled = {this.props.stateObj.days[dayNum] === null}
                             error = {this.state.maxError[dayNum]}
                             label = 'Closing Time'
-                            helperText = {this.state.minError[dayNum] ? 'missing data' : ''}
+                            helperText = {this.state.maxError[dayNum] ? 'missing data' : ''}
                             className = {classes.textField}
                             value = {this.getState('max', dayNum)}
                             onChange = {(event) => {this.resetError('maxError', dayNum); this.handleChange('max', dayNum, event.target.value);}}
@@ -147,7 +156,7 @@ class InputForm2 extends Component
                         > {getTimeItems()}
                         </TextField>
 
-                        {this.state.compareError[dayNum] ? <p className = {classes.error}> start time must be before endtime </p> : null}
+                        {this.state.compareError[dayNum] ? <p className = {classes.error}> start time must be before end time </p> : null}
                         
                         <div className = {classes.divider}/>
 

@@ -81,9 +81,6 @@ class AdminStepper extends Component
       min: convertDateToHours(el.min)*3600000,
       max: convertDateToHours(el.max)*3600000
     }));
-    console.log(this.state.imgFile);
-    console.log(this.state.days);
-    console.log(this.state.name, this.state.address, days, this.state.imgFile);
     this.props.createPark(this.state.parkName, this.state.parkAddress, days, this.state.imgFile, this.props.history);
   }
 
@@ -105,7 +102,7 @@ class AdminStepper extends Component
                 fileUpload = {(file) => this.setState({imgFile: file})}/>;
             default:
               return (
-                <div>
+                <div className = {classes.container}>
                     <Typography className = {classes.confirmation}>
                         All steps are completed. Do you wish to submit data or go back?
                     </Typography>
@@ -152,6 +149,15 @@ const styles = (theme) =>
 {
   return (
     {
+      container: {
+        width: '95%',
+        margin: 'auto',
+        marginBottom: '2rem',
+        padding: '1.5rem',
+        backgroundColor: 'lightgrey',
+        borderRadius: '1.5rem',
+        textAlign: 'center'
+      },
       form: {margin: 'auto', width: '90%'},
       root: {margin: 'auto'},
       stepper: {backgroundColor: 'lightblue', width: '90%', margin: 'auto', borderRadius: '1.2rem'},
