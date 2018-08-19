@@ -7,8 +7,33 @@ import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
 import styles from './Styles';
 const moment = require('moment');
-const info = (props)=>{
+const info = (props) =>
+{
   const days = props.days;
+  const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const daySchedule = () =>
+  {
+    return [0,1,2,3,4,5,6].map((e) =>
+    {
+      return(
+        <div className = {props.classes.generalTime}>
+          <Typography className = {props.classes.day}> {dayNames[e]} </Typography>
+          <Grid container spacing={0}>
+            <Grid item xs={12} md={5}>
+              <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[e].min)).format('hh:mm A')}</Typography>
+            </Grid>
+            <Grid item xs={12} md = {2}>
+              <Typography className = {props.classes.center}variant = 'display1'>TO</Typography>
+            </Grid>
+            <Grid item xs={12} md={5}>
+              <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[e].max)).format('hh:mm A')}</Typography>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    });
+  }
+
   return (
     <Wrapper>
       <Paper className = {props.classes.container}>
@@ -25,91 +50,7 @@ const info = (props)=>{
       <Paper className = {props.classes.container}>
         <Typography variant = 'headline'>General Hours</Typography>
         <Divider/>
-
-        <Grid container spacing={0} className = {props.classes.generalTime}>
-          Sunday
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[0].min)).format('hh:mm A')}</Typography>
-          </Grid>
-          <Grid item xs={12} md = {2}>
-            <Typography className = {props.classes.center}variant = 'display1'>TO</Typography>
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[0].max)).format('hh:mm A')}</Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={0} className = {props.classes.generalTime}>
-          Monday
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[1].min)).format('hh:mm A')}</Typography>
-          </Grid>
-          <Grid item xs={12} md = {2}>
-            <Typography className = {props.classes.center}variant = 'display1'>TO</Typography>
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[1].max)).format('hh:mm A')}</Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={0} className = {props.classes.generalTime}>
-          Tuesday
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[2].min)).format('hh:mm A')}</Typography>
-          </Grid>
-          <Grid item xs={12} md = {2}>
-            <Typography className = {props.classes.center}variant = 'display1'>TO</Typography>
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[2].max)).format('hh:mm A')}</Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={0} className = {props.classes.generalTime}>
-          Wednesday
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[3].min)).format('hh:mm A')}</Typography>
-          </Grid>
-          <Grid item xs={12} md = {2}>
-            <Typography className = {props.classes.center}variant = 'display1'>TO</Typography>
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[3].max)).format('hh:mm A')}</Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={0} className = {props.classes.generalTime}>
-          Thursday
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[4].min)).format('hh:mm A')}</Typography>
-          </Grid>
-          <Grid item xs={12} md = {2}>
-            <Typography className = {props.classes.center}variant = 'display1'>TO</Typography>
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[4].max)).format('hh:mm A')}</Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={0} className = {props.classes.generalTime}>
-          Friday
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[5].min)).format('hh:mm A')}</Typography>
-          </Grid>
-          <Grid item xs={12} md = {2}>
-            <Typography className = {props.classes.center}variant = 'display1'>TO</Typography>
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[5].max)).format('hh:mm A')}</Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={0} className = {props.classes.generalTime}>
-          Saturday
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[6].min)).format('hh:mm A')}</Typography>
-          </Grid>
-          <Grid item xs={12} md = {2}>
-            <Typography className = {props.classes.center}variant = 'display1'>TO</Typography>
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <Typography className = {props.classes.center}variant = 'display1'>{moment().startOf('day').add(parseInt(days[6].max)).format('hh:mm A')}</Typography>
-          </Grid>
-        </Grid>
+        {daySchedule()}
       </Paper>
     </Wrapper>
   )

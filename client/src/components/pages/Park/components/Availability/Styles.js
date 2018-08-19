@@ -14,6 +14,7 @@ const styles = {
   button: {margin: '1rem'},
   message: {margin: '1rem'},
   divider: {height: '1rem'},
-  calenderDiv: {backgroundColor: 'lightgrey', padding: '0.5rem', borderRadius: '1rem'}
+  calenderDiv: {backgroundColor: 'lightgrey', padding: '0.5rem', borderRadius: '1rem'},
+  calender: {color: 'dodgerblue'}
 }
 export default styles;
