@@ -15,6 +15,7 @@ const schedule = require('node-schedule');
 
 
 
+
 const sendEmail= require('../../util/notification');
 
 
@@ -407,6 +408,58 @@ let openTime = new Date();
         })
 
 });
+
+//Job For sending checkin emails
+let k = schedule.scheduleJob('45 * * * * ', function(){
+
+
+    // let openTime =new Date();
+    let openTime = new Date();
+
+//for 45 min-th query,add +1 to hour.
+    openTime.setHours(openTime.getHours()+1)
+
+
+
+    // let roundTime= roundMinutes(openTime)
+
+    console.log("Scheduler ran at :" +openTime )
+
+    Reservation.find({
+        startTime:
+            {
+                $lt:openTime
+            },
+        endTime:
+            {
+                $gte: openTime
+            },
+        status:"Upcoming"
+
+    }).then(retReservation=>{
+
+        for ( let i = 0; i < retReservation.length; i++) {
+            let  CurrReserveUser = retReservation[i].user
+
+
+            User.findById(
+                CurrReserveUser
+            ).then(currUser=>{
+                var emailText = 'hi there, Please check In - From San Jose Sports Facility Reservation ';
+                //TODO : hardcoding email as it
+                var toEmail = currUser.email;
+                sendEmail(emailText,toEmail,"Checkin Reminder",()=>{});
+
+            })
+
+
+        }
+
+    })
+
+});
+
+
 
 
 
