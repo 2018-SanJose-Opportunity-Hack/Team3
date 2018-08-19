@@ -1,3 +1,5 @@
+import './components/newStyle.css';
+
 import React, {Component} from 'react';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -21,6 +23,8 @@ import zIndex from '@material-ui/core/styles/zIndex';
 //import PaypalButton from '../../../../general/PayPalButton';
 const moment = require('moment-timezone');
 
+
+
 class Availibility extends Component{
   state = {
     selectedDate: null,
@@ -31,7 +35,53 @@ class Availibility extends Component{
     selectedTimeBlockId: null,
     arrayCheckboxState: []
   }
-   
+
+
+
+  componentDidMount (){
+      window.paypal.Button.render({
+
+          // Set your environment
+
+          env: 'sandbox', // sandbox | production
+
+          // Specify the style of the button
+
+          style: {
+              label: 'checkout',
+              size:  'small',    // small | medium | large | responsive
+              shape: 'pill',     // pill | rect
+              color: 'gold'      // gold | blue | silver | black
+          },
+
+          // PayPal Client IDs - replace with your own
+          // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+
+          client: {
+              sandbox:    'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+              production: '<insert production client id>'
+          },
+
+          payment: function(data, actions) {
+              return actions.payment.create({
+                  payment: {
+                      transactions: [
+                          {
+                              amount: { total: '0.01', currency: 'USD' }
+                          }
+                      ]
+                  }
+              });
+          },
+
+          onAuthorize: function(data, actions) {
+              return actions.payment.execute().then(function() {
+                  window.alert('Payment Complete!');
+              });
+          }
+
+      }, '#paypal-button-container');
+  }
   dateChangeHandler = (date) => {
     console.log(moment(date).tz('America/Los_Angeles').toDate()); 
     const index = this.props.park.park.days.findIndex((val) => {
@@ -109,21 +159,26 @@ class Availibility extends Component{
               <Typography variant= 'display1' className = {this.props.classes.message}>
                 {this.props.auth.user?'Are you sure you want to reserve this time slot':'Please log in before making any reservation.'}
               </Typography>
-              {
               <Button color = 'primary' className = {this.props.classes.button} variant = 'contained' onClick = {this.props.auth.user? this.makeReservation: ()=>{this.props.history.push('/login')}} disabled = {this.props.loading.reservationLoading}>
-                  {this.props.auth.user ? 'Confirm': 'Login'}
+                  {this.props.auth.user ? 'confirm': 'Login'}
                 </Button>
-              }
+
+                <Button className = 'payment' color = 'primary' variant = 'contained'  disabled = {this.props.loading.reservationLoading} prop>
+                  </Button>
               {/*buttonOptions*/}
               <Button className = {this.props.classes.button} variant = 'contained' onClick = {this.reservationModalHandler} disabled = {this.props.loading.reservationLoading}>Close</Button>
+
             </Paper>
+
           </Modal>
           <div style = {{
             textAlign: 'center',
             paddingTop: 10,
             paddingBottom: 20
           }}>
-          <div className = {this.props.classes.calenderDiv}>
+              {/*<div id="paypal-button-container"/>*/}
+
+            <div className = {this.props.classes.calenderDiv}>
             <MuiPickersUtilsProvider utils = {MomentUtils}>
               <DatePicker
                 className = {this.props.classes.calender}

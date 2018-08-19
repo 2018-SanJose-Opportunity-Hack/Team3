@@ -1,0 +1,9 @@
+.payment
+{
+    background-image: url('./paypal.png');
+    border: none;
+    background-color: transparent;
+    box-shadow: 0 0 white;
+    width: 10rem;
+    background-size: contain;
+}

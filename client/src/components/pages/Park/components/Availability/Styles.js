@@ -15,6 +15,7 @@ const styles = {
   message: {margin: '1rem'},
   divider: {height: '1rem'},
   calenderDiv: {backgroundColor: 'lightgrey', padding: '0.5rem', borderRadius: '1rem'},
-  calender: {color: 'dodgerblue'}
+  calender: {color: 'dodgerblue'},
+    payment: {backgroundImage: 'url(client/src/components/pages/Park/components/Availability/components/paypal.png)'}
 }
 export default styles;
