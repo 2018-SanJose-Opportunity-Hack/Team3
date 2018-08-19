@@ -68,6 +68,7 @@ export const createPark = (name, address, days, file, history)=> dispatch=>{
       }
     })
     .catch(errors=>{
+      console.log(errors.response);
       history.push(`/account`);
     });
 }

@@ -1,4 +1,5 @@
 const multer = require('multer');
+const path = require('path');
 const fileFilter = (req, file, cb) => {
   const ext = path.extname(file.originalname);
   if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
@@ -14,4 +15,4 @@ const upload = multer({
   fileFilter,
   limits
 }).single('avatar');
-module.exports = multer;
+module.exports = upload;

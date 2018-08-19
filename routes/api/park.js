@@ -27,6 +27,7 @@ router.post('/changeImage/:id', passport.authenticate('jwt', {session: false}), 
 // @desc    Create a new park
 // @access  Private (Admin)
 router.post('/create', passport.authenticate('jwt', {session: false}), (req, res) => {
+
   User.findById(req.user.id)
     .then(user => {
       //check if user exists
@@ -80,14 +81,17 @@ router.post('/create', passport.authenticate('jwt', {session: false}), (req, res
               }
               newDaysArray.push(newDay);
             }
+            console.log(newDaysArray);
             Day.create(newDaysArray)
               .then(days => {
                 const daysId = days.map(el => el.id);
                 //update park and send new results back
                 const timeblocksArrays = [];
                 for(let day of days){
+                  
                   let startTime = moment(day.openTime).tz('America/Los_Angeles').format('x');
                   let endTime = moment(day.closeTime).tz('America/Los_Angeles').format('x');
+              
                   let endIteration = (parseInt(endTime)-parseInt(startTime))/3600000;
                   for(let i = 0; i< endIteration; i++){
                     const newTimeblock = {
@@ -98,6 +102,7 @@ router.post('/create', passport.authenticate('jwt', {session: false}), (req, res
                     timeblocksArrays.push(newTimeblock);
                   }
                 }
+                
                 TimeBlock.create(timeblocksArrays)
                   .then(timeblocks=>{
                     //array of functions used to create timeblocks
@@ -250,7 +255,7 @@ router.get('/:parkId/day/:dayId', (req, res)=>{
 // @desc    Change profile picture
 // @access  Private
 router.post('/:parkId/profile', passport.authenticate('jwt',{session: false}), (req, res)=>{
-  upload((req, res, err)=>{
+  upload(req, res, err=>{
     if (err) {
       console.log(err);
       return res.status(400).json({errors: err});

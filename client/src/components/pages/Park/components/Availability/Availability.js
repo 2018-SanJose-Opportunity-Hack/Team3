@@ -117,8 +117,10 @@ class Availibility extends Component{
                   endTime = {moment(el.endTime).tz("America/Los_Angeles").format('hh:mm A')}
                   isAvailable = {el.isAvailable}
                   click = {()=>this.openReservationModal(el._id)}
+                  key = {el._id}
+                  id = {el._id}
                 />
-              )
+              ) 
           })}
         </Wrapper>
       )
