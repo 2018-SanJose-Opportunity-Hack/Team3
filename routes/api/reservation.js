@@ -10,12 +10,12 @@ const User = mongoose.model('users');
 const Day = mongoose.model('days');
 const TimeBlock = mongoose.model('timeblocks');
 const Reservation  = mongoose.model('reservations');
-const subscribed = mongoose.model('subscribe');
+const Subscribe = mongoose.model('subscribe');
 const schedule = require('node-schedule');
 
 
 
-
+const sendEmail= require('../../util/notification');
 
 
 
@@ -33,7 +33,7 @@ router.post("/hello",  passport.authenticate('jwt', {session: false}), (req, res
             if (!user) {
                 return res.status(401).json({errors: 'Not an existing user'});
             }
-            subscribed.find({
+            Subscribe.find({
                 time : "5b78be509eaebe056004ba78"
             }).then(retSubscribed=>{
 
@@ -239,10 +239,12 @@ router.put('/cancel/:reservationId', passport.authenticate('jwt', {session: fals
           if(reservation.user.toString()!==user.id.toString()){
             return res.status(403).json({errors: 'Not your reservation'});
           }
+          let timeBlockId = null;
           async.parallel([
             (callback)=>{
               TimeBlock.findOneAndUpdate({reservation: reservation.id}, {isAvailable: true, $unset: {reservation: ''}}, {new: true})
                 .then(timeblock=>{
+                    timeBlockId = timeblock.id;
                     callback(null, true);
                 })
             },
@@ -261,6 +263,22 @@ router.put('/cancel/:reservationId', passport.authenticate('jwt', {session: fals
             if(results.filter(el=>el).length!==2){
               return res.status(400).json({errors: 'Something went wrong'});
             }
+            TimeBlock.findById(timeBlockId)
+              .populate({path: 'subscriptions', populate: {path: 'user'}})
+              .populate({path: 'day', populate: {path: 'park'}})
+              .then(timeblock=>{
+                const asyncEmails = timeblock.subscriptions.map(el=>{
+                  return ()=>{
+                    const emailText = `The Time Slot You are Subscribed to at ${timeblock.day.park.name} from ${moment(timeblock.startTime).tz('America/Los_Angeles').format('MM-DD-YYYY hh:mm A')} is now available`
+                    const emailTitle = 'New Time Slot Available'
+                    const toEmail= el.user.email;
+                    sendEmail(emailText, toEmail, emailTitle, ()=>console.log('Some Message'));  
+                  }
+                })
+                async.parallel(asyncEmails, ()=>{
+                  TimeBlock.findByIdAndUpdate(timeBlockId, {$set: {subscriptions: []}})
+                })
+              });
             return res.json({
               success: true
             });
