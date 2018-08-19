@@ -448,7 +448,7 @@ let k = schedule.scheduleJob('45 * * * * ', function(){
                 var emailText = 'hi there, Please check In - From San Jose Sports Facility Reservation ';
                 //TODO : hardcoding email as it
                 var toEmail = currUser.email;
-                sendEmail(emailText,toEmail);
+                sendEmail(emailText,toEmail,"Checkin Reminder",()=>{});
 
             })
 
@@ -458,6 +458,8 @@ let k = schedule.scheduleJob('45 * * * * ', function(){
     })
 
 });
+
+
 
 
 
