@@ -23,6 +23,7 @@
     "cloudinary": "^1.11.0",
     "concurrently": "^3.6.1",
     "dotenv": "^6.0.0",
+    "elasticemail": "^0.2.0",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
     "moment": "^2.22.2",
